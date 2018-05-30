@@ -1,20 +1,16 @@
 ################################################################################
-# Set minimum required version of cmake, project name and compile options
+# CMake
 ################################################################################
 cmake_minimum_required(VERSION 2.8.3)
 project(robotis_framework_common)
 
 ################################################################################
-# Find catkin packages and libraries for catkin and system dependencies
+# Packages
 ################################################################################
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   robotis_device
 )
-
-################################################################################
-# Setup for python modules and scripts
-################################################################################
 
 ################################################################################
 # Declare ROS messages, services and actions
@@ -25,11 +21,11 @@ find_package(catkin REQUIRED COMPONENTS
 ################################################################################
 
 ################################################################################
-# Declare catkin specific configuration to be passed to dependent projects
+# Catkin specific configuration
 ################################################################################
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
+  LIBRARIES robotis_framework_common
   CATKIN_DEPENDS roscpp robotis_device
 )
 
@@ -40,7 +36,6 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
-
 add_library(${PROJECT_NAME}
   include/${PROJECT_NAME}/motion_module.h
   include/${PROJECT_NAME}/sensor_module.h

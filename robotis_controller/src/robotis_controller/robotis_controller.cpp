@@ -1,18 +1,32 @@
 /*******************************************************************************
-* Copyright 2018 ROBOTIS CO., LTD.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*******************************************************************************/
+ * Copyright (c) 2016, ROBOTIS CO., LTD.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * * Neither the name of ROBOTIS nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *******************************************************************************/
 
 /*
  * robotis_controller.cpp
@@ -471,8 +485,6 @@ void RobotisController::initializeDevice(const std::string init_file_path)
     {
       if (dxl->bulk_read_items_.size() != 0)
       {
-        uint16_t  data16 = 0;
-
         bulkread_start_addr = dxl->bulk_read_items_[0]->address_;
         bulkread_data_length = 0;
 
@@ -485,13 +497,8 @@ void RobotisController::initializeDevice(const std::string init_file_path)
           bulkread_data_length += addr_leng;
           for (int l = 0; l < addr_leng; l++)
           {
-            // ROS_WARN("[%12s] INDIR_ADDR: %d, ITEM_ADDR: %d", joint_name.c_str(), indirect_addr, dxl->ctrl_table[dxl->bulk_read_items[i]->item_name]->address + _l);
-
-            read2Byte(joint_name, indirect_addr, &data16);
-            if (data16 != dxl->ctrl_table_[dxl->bulk_read_items_[i]->item_name_]->address_ + l)
-            {
-              write2Byte(joint_name, indirect_addr, dxl->ctrl_table_[dxl->bulk_read_items_[i]->item_name_]->address_ + l);
-            }
+//            ROS_WARN("[%12s] INDIR_ADDR: %d, ITEM_ADDR: %d", joint_name.c_str(), indirect_addr, dxl->ctrl_table[dxl->bulk_read_items[i]->item_name]->address + _l);
+            write2Byte(joint_name, indirect_addr, dxl->ctrl_table_[dxl->bulk_read_items_[i]->item_name_]->address_ + l);
             indirect_addr += 2;
           }
         }
@@ -545,8 +552,6 @@ void RobotisController::initializeDevice(const std::string init_file_path)
     {
       if (sensor->bulk_read_items_.size() != 0)
       {
-        uint16_t  data16 = 0;
-
         bulkread_start_addr = sensor->bulk_read_items_[0]->address_;
         bulkread_data_length = 0;
 
@@ -560,13 +565,9 @@ void RobotisController::initializeDevice(const std::string init_file_path)
           for (int l = 0; l < addr_leng; l++)
           {
 //            ROS_WARN("[%12s] INDIR_ADDR: %d, ITEM_ADDR: %d", sensor_name.c_str(), indirect_addr, sensor->ctrl_table[sensor->bulk_read_items[i]->item_name]->address + _l);
-            read2Byte(sensor_name, indirect_addr, &data16);
-            if (data16 != sensor->ctrl_table_[sensor->bulk_read_items_[i]->item_name_]->address_ + l)
-            {
-              write2Byte(sensor_name,
-                         indirect_addr,
-                         sensor->ctrl_table_[sensor->bulk_read_items_[i]->item_name_]->address_ + l);
-            }
+            write2Byte(sensor_name,
+                       indirect_addr,
+                       sensor->ctrl_table_[sensor->bulk_read_items_[i]->item_name_]->address_ + l);
             indirect_addr += 2;
           }
         }
@@ -657,13 +658,19 @@ void RobotisController::msgQueueThread()
     }
   }
 
+ /* for (auto& it : robot_->dxls_)
+      {
+        gazebo_joint_position_pub_[it.first] = ros_node.advertise<std_msgs::Float64>(
+                                                  "/" + gazebo_robot_name_ + "/" + it.first + "_position/command", 1);
+        gazebo_joint_velocity_pub_[it.first] = ros_node.advertise<std_msgs::Float64>(
+                                                  "/" + gazebo_robot_name_ + "/" + it.first + "_velocity/command", 1);
+        gazebo_joint_effort_pub_[it.first]   = ros_node.advertise<std_msgs::Float64>(
+                                                  "/" + gazebo_robot_name_ + "/" + it.first + "_effort/command", 1);
+      }
+*/
   /* service */
-  ros::ServiceServer get_joint_module_server = ros_node.advertiseService("/robotis/get_present_joint_ctrl_modules",
-                                                        &RobotisController::getJointCtrlModuleService, this);
-  ros::ServiceServer set_joint_module_server = ros_node.advertiseService("/robotis/set_present_joint_ctrl_modules",
-                                                        &RobotisController::setJointCtrlModuleService, this);
-  ros::ServiceServer set_module_server = ros_node.advertiseService("/robotis/set_present_ctrl_modules",
-                                                        &RobotisController::setCtrlModuleService, this);
+  ros::ServiceServer joint_module_server = ros_node.advertiseService("/robotis/get_present_joint_ctrl_modules",
+                                                        &RobotisController::getCtrlModuleCallback, this);
 
   ros::WallDuration duration(robot_->getControlCycle() / 1000.0);
   while(ros_node.ok())
@@ -850,7 +857,7 @@ void RobotisController::loadOffset(const std::string path)
     doc = YAML::LoadFile(path.c_str());
   } catch (const std::exception& e)
   {
-    ROS_WARN("Fail to load offset yaml.");
+    ROS_ERROR("Fail to load offset yaml.");
     return;
   }
 
@@ -926,19 +933,19 @@ void RobotisController::process()
 
                 // change dxl_state
                 if (dxl->present_position_item_ != 0 && item->item_name_ == dxl->present_position_item_->item_name_)
-                  dxl->dxl_state_->present_position_ = dxl->convertValue2Radian(data) - dxl->dxl_state_->position_offset_; // remove offset
+                  dxl->dxl_state_->present_position_ = dxl->convertValue2Radian(data) - dxl->direction_*dxl->dxl_state_->position_offset_; // remove offset ////////////////////////////////////////
                 else if (dxl->present_velocity_item_ != 0 && item->item_name_ == dxl->present_velocity_item_->item_name_)
                   dxl->dxl_state_->present_velocity_ = dxl->convertValue2Velocity(data);
                 else if (dxl->present_current_item_ != 0 && item->item_name_ == dxl->present_current_item_->item_name_)
                   dxl->dxl_state_->present_torque_ = dxl->convertValue2Torque(data);
                 else if (dxl->goal_position_item_ != 0 && item->item_name_ == dxl->goal_position_item_->item_name_)
-                  dxl->dxl_state_->goal_position_ = dxl->convertValue2Radian(data) - dxl->dxl_state_->position_offset_; // remove offset
+                  dxl->dxl_state_->goal_position_ = dxl->convertValue2Radian(data) - dxl->direction_*dxl->dxl_state_->position_offset_; // remove offset//////////////////////////
                 else if (dxl->goal_velocity_item_ != 0 && item->item_name_ == dxl->goal_velocity_item_->item_name_)
                   dxl->dxl_state_->goal_velocity_ = dxl->convertValue2Velocity(data);
                 else if (dxl->goal_current_item_ != 0 && item->item_name_ == dxl->goal_current_item_->item_name_)
                   dxl->dxl_state_->goal_torque_ = dxl->convertValue2Torque(data);
-
-                dxl->dxl_state_->bulk_read_table_[item->item_name_] = data;
+                else
+                  dxl->dxl_state_->bulk_read_table_[item->item_name_] = data;
               }
             }
 
@@ -1146,19 +1153,19 @@ void RobotisController::process()
 
                 // change dxl_state
                 if (dxl->present_position_item_ != 0 && item->item_name_ == dxl->present_position_item_->item_name_)
-                  dxl->dxl_state_->present_position_ = dxl->convertValue2Radian(data) - dxl->dxl_state_->position_offset_; // remove offset
+                  dxl->dxl_state_->present_position_ = dxl->convertValue2Radian(data) - dxl->direction_*dxl->dxl_state_->position_offset_; // remove offset
                 else if (dxl->present_velocity_item_ != 0 && item->item_name_ == dxl->present_velocity_item_->item_name_)
                   dxl->dxl_state_->present_velocity_ = dxl->convertValue2Velocity(data);
                 else if (dxl->present_current_item_ != 0 && item->item_name_ == dxl->present_current_item_->item_name_)
                   dxl->dxl_state_->present_torque_ = dxl->convertValue2Torque(data);
                 else if (dxl->goal_position_item_ != 0 && item->item_name_ == dxl->goal_position_item_->item_name_)
-                  dxl->dxl_state_->goal_position_ = dxl->convertValue2Radian(data) - dxl->dxl_state_->position_offset_; // remove offset
+                  dxl->dxl_state_->goal_position_ = dxl->convertValue2Radian(data) - dxl->direction_*dxl->dxl_state_->position_offset_; // remove offset
                 else if (dxl->goal_velocity_item_ != 0 && item->item_name_ == dxl->goal_velocity_item_->item_name_)
                   dxl->dxl_state_->goal_velocity_ = dxl->convertValue2Velocity(data);
                 else if (dxl->goal_current_item_ != 0 && item->item_name_ == dxl->goal_current_item_->item_name_)
                   dxl->dxl_state_->goal_torque_ = dxl->convertValue2Torque(data);
-
-                dxl->dxl_state_->bulk_read_table_[item->item_name_] = data;
+                else
+                  dxl->dxl_state_->bulk_read_table_[item->item_name_] = data;
               }
             }
 
@@ -1242,7 +1249,7 @@ void RobotisController::process()
 
             if (result_state == NULL)
             {
-              ROS_ERROR("[%s] %s ", (*module_it)->getModuleName().c_str(), joint_name.c_str());
+              fprintf(stderr, "[%s] %s", (*module_it)->getModuleName().c_str(), joint_name.c_str());
               continue;
             }
 
@@ -1252,10 +1259,11 @@ void RobotisController::process()
             {
               dxl_state->goal_position_ = result_state->goal_position_;
 
+
               if (gazebo_mode_ == false)
               {
                 // add offset
-                uint32_t pos_data = dxl->convertRadian2Value(dxl_state->goal_position_ + dxl_state->position_offset_);
+                uint32_t pos_data = dxl->convertRadian2Value(dxl_state->goal_position_ + dxl->direction_*dxl_state->position_offset_);////////////////////
                 uint8_t sync_write_data[4] = { 0 };
                 sync_write_data[0] = DXL_LOBYTE(DXL_LOWORD(pos_data));
                 sync_write_data[1] = DXL_HIBYTE(DXL_LOWORD(pos_data));
@@ -1403,7 +1411,7 @@ void RobotisController::process()
     Dynamixel  *dxl         = dxl_it.second;
 
     present_state.name.push_back(joint_name);
-    present_state.position.push_back(dxl->dxl_state_->present_position_);
+    present_state.position.push_back(dxl->dxl_state_->present_position_);///////////////////////////////////////////////////////////
     present_state.velocity.push_back(dxl->dxl_state_->present_velocity_);
     present_state.effort.push_back(dxl->dxl_state_->present_torque_);
 
@@ -1637,33 +1645,30 @@ void RobotisController::setControllerModeCallback(const std_msgs::String::ConstP
 
 void RobotisController::setJointStatesCallback(const sensor_msgs::JointState::ConstPtr &msg)
 {
+  if (controller_mode_ != DirectControlMode)
+    return;
+
   queue_mutex_.lock();
 
   for (int i = 0; i < msg->name.size(); i++)
   {
+    int32_t pos = 0;
+
     Dynamixel *dxl = robot_->dxls_[msg->name[i]];
     if (dxl == NULL)
       continue;
 
-    if ((controller_mode_ == DirectControlMode) || 
-        (controller_mode_ == MotionModuleMode && dxl->ctrl_module_name_ == "none"))
-    {
-      dxl->dxl_state_->goal_position_ = (double) msg->position[i];
-      
-      if (gazebo_mode_ == false)
-      {
-        // add offset
-        uint32_t pos_data = dxl->convertRadian2Value(dxl->dxl_state_->goal_position_ + dxl->dxl_state_->position_offset_);
-        uint8_t sync_write_data[4] = { 0 };
-        sync_write_data[0] = DXL_LOBYTE(DXL_LOWORD(pos_data));
-        sync_write_data[1] = DXL_HIBYTE(DXL_LOWORD(pos_data));
-        sync_write_data[2] = DXL_LOBYTE(DXL_HIWORD(pos_data));
-        sync_write_data[3] = DXL_HIBYTE(DXL_HIWORD(pos_data));
-        
-        if (port_to_sync_write_position_[dxl->port_name_] != NULL)
-          port_to_sync_write_position_[dxl->port_name_]->changeParam(dxl->id_, sync_write_data);
-      }
-    }
+    dxl->dxl_state_->goal_position_ = msg->position[i];
+    pos = dxl->convertRadian2Value((double) msg->position[i]);
+
+    uint8_t sync_write_data[4];
+    sync_write_data[0] = DXL_LOBYTE(DXL_LOWORD(pos));
+    sync_write_data[1] = DXL_HIBYTE(DXL_LOWORD(pos));
+    sync_write_data[2] = DXL_LOBYTE(DXL_HIWORD(pos));
+    sync_write_data[3] = DXL_HIBYTE(DXL_HIWORD(pos));
+
+    if (port_to_sync_write_position_[dxl->port_name_] != NULL)
+      port_to_sync_write_position_[dxl->port_name_]->addParam(dxl->id_, sync_write_data);
   }
 
   queue_mutex_.unlock();
@@ -1671,9 +1676,6 @@ void RobotisController::setJointStatesCallback(const sensor_msgs::JointState::Co
 
 void RobotisController::setCtrlModuleCallback(const std_msgs::String::ConstPtr &msg)
 {
-  if(set_module_thread_.joinable())
-    set_module_thread_.join();
-
   std::string _module_name_to_set = msg->data;
 
   set_module_thread_ = boost::thread(boost::bind(&RobotisController::setCtrlModuleThread, this, _module_name_to_set));
@@ -1681,9 +1683,6 @@ void RobotisController::setCtrlModuleCallback(const std_msgs::String::ConstPtr &
 
 void RobotisController::setCtrlModule(std::string module_name)
 {
-  if(set_module_thread_.joinable())
-    set_module_thread_.join();
-
   set_module_thread_ = boost::thread(boost::bind(&RobotisController::setCtrlModuleThread, this, module_name));
 }
 void RobotisController::setJointCtrlModuleCallback(const robotis_controller_msgs::JointCtrlModule::ConstPtr &msg)
@@ -1691,13 +1690,10 @@ void RobotisController::setJointCtrlModuleCallback(const robotis_controller_msgs
   if (msg->joint_name.size() != msg->module_name.size())
     return;
 
-  if(set_module_thread_.joinable())
-    set_module_thread_.join();
-
   set_module_thread_ = boost::thread(boost::bind(&RobotisController::setJointCtrlModuleThread, this, msg));
 }
 
-bool RobotisController::getJointCtrlModuleService(robotis_controller_msgs::GetJointModule::Request &req,
+bool RobotisController::getCtrlModuleCallback(robotis_controller_msgs::GetJointModule::Request &req,
     robotis_controller_msgs::GetJointModule::Response &res)
 {
   for (unsigned int idx = 0; idx < req.joint_name.size(); idx++)
@@ -1712,41 +1708,6 @@ bool RobotisController::getJointCtrlModuleService(robotis_controller_msgs::GetJo
 
   if (res.joint_name.size() == 0)
     return false;
-
-  return true;
-}
-
-bool RobotisController::setJointCtrlModuleService(robotis_controller_msgs::SetJointModule::Request &req, robotis_controller_msgs::SetJointModule::Response &res)
-{
-  if(set_module_thread_.joinable())
-    set_module_thread_.join();
-
-  robotis_controller_msgs::JointCtrlModule modules;
-  modules.joint_name = req.joint_name;
-  modules.module_name = req.module_name;
-
-  robotis_controller_msgs::JointCtrlModule::ConstPtr msg_ptr(new robotis_controller_msgs::JointCtrlModule(modules));
-
-  if (modules.joint_name.size() != modules.module_name.size())
-    return false;
-
-  set_module_thread_ = boost::thread(boost::bind(&RobotisController::setJointCtrlModuleThread, this, msg_ptr));
-
-  set_module_thread_.join();
-
-  return true;
-}
-
-bool RobotisController::setCtrlModuleService(robotis_controller_msgs::SetModule::Request &req, robotis_controller_msgs::SetModule::Response &res)
-{
-  if(set_module_thread_.joinable())
-    set_module_thread_.join();
-
-  std::string _module_name_to_set = req.module_name;
-
-  set_module_thread_ = boost::thread(boost::bind(&RobotisController::setCtrlModuleThread, this, _module_name_to_set));
-
-  set_module_thread_.join();
 
   return true;
 }
@@ -1925,6 +1886,14 @@ void RobotisController::setJointCtrlModuleThread(const robotis_controller_msgs::
 
   queue_mutex_.unlock();
 
+  // log
+//  std::cout << "Enable Joint Ctrl Module : " << std::endl;
+//  for(std::list<MotionModule *>::iterator _m_it = motion_modules_.begin(); _m_it != motion_modules_.end(); _m_it++)
+//  {
+//    if((*_m_it)->GetModuleEnable() == true)
+//      std::cout << "     - " << (*_m_it)->GetModuleName() << std::endl;
+//  }
+
   // publish current module
   robotis_controller_msgs::JointCtrlModule _current_module_msg;
   for(std::map<std::string, Dynamixel *>::iterator _dxl_iter = robot_->dxls_.begin(); _dxl_iter  != robot_->dxls_.end(); ++_dxl_iter)
@@ -1936,7 +1905,6 @@ void RobotisController::setJointCtrlModuleThread(const robotis_controller_msgs::
   if(_current_module_msg.joint_name.size() == _current_module_msg.module_name.size())
     current_module_pub_.publish(_current_module_msg);
 }
-
 void RobotisController::setCtrlModuleThread(std::string ctrl_module)
 {
   // stop module

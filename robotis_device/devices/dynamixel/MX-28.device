@@ -44,9 +44,9 @@ velocity_p_gain_item_name       =
    22  | resolution_dividor       | 1      | RW     | EEPROM | 1             | 255         | N
    24  | torque_enable            | 1      | RW     | RAM    | 0             | 1           | N
    25  | LED                      | 1      | RW     | RAM    | 0             | 1           | N
-   26  | position_d_gain          | 1      | RW     | RAM    | 0             | 254         | N
-   27  | position_i_gain          | 1      | RW     | RAM    | 0             | 254         | N
-   28  | position_p_gain          | 1      | RW     | RAM    | 0             | 254         | N
+   26  | position_d_gain          | 1      | RW     | RAM    | 0             | 16383       | N
+   27  | position_i_gain          | 1      | RW     | RAM    | 0             | 16383       | N
+   28  | position_p_gain          | 1      | RW     | RAM    | 0             | 16383       | N
    30  | goal_position            | 2      | RW     | RAM    | -28672        | 28672       | Y
    32  | goal_velocity            | 2      | RW     | RAM    | 0             | 1023        | N
    34  | goal_torque              | 2      | RW     | RAM    | 0             | 1023        | N
