@@ -933,13 +933,13 @@ void RobotisController::process()
 
                 // change dxl_state
                 if (dxl->present_position_item_ != 0 && item->item_name_ == dxl->present_position_item_->item_name_)
-                  dxl->dxl_state_->present_position_ = dxl->convertValue2Radian(data) - dxl->direction_*dxl->dxl_state_->position_offset_; // remove offset ////////////////////////////////////////
+                  dxl->dxl_state_->present_position_ = dxl->convertValue2Radian(data) - dxl->dxl_state_->position_offset_; // remove offset ////////////////////////////////////////
                 else if (dxl->present_velocity_item_ != 0 && item->item_name_ == dxl->present_velocity_item_->item_name_)
                   dxl->dxl_state_->present_velocity_ = dxl->convertValue2Velocity(data);
                 else if (dxl->present_current_item_ != 0 && item->item_name_ == dxl->present_current_item_->item_name_)
                   dxl->dxl_state_->present_torque_ = dxl->convertValue2Torque(data);
                 else if (dxl->goal_position_item_ != 0 && item->item_name_ == dxl->goal_position_item_->item_name_)
-                  dxl->dxl_state_->goal_position_ = dxl->convertValue2Radian(data) - dxl->direction_*dxl->dxl_state_->position_offset_; // remove offset//////////////////////////
+                  dxl->dxl_state_->goal_position_ = dxl->convertValue2Radian(data) - dxl->dxl_state_->position_offset_; // remove offset//////////////////////////
                 else if (dxl->goal_velocity_item_ != 0 && item->item_name_ == dxl->goal_velocity_item_->item_name_)
                   dxl->dxl_state_->goal_velocity_ = dxl->convertValue2Velocity(data);
                 else if (dxl->goal_current_item_ != 0 && item->item_name_ == dxl->goal_current_item_->item_name_)
@@ -1153,13 +1153,13 @@ void RobotisController::process()
 
                 // change dxl_state
                 if (dxl->present_position_item_ != 0 && item->item_name_ == dxl->present_position_item_->item_name_)
-                  dxl->dxl_state_->present_position_ = dxl->convertValue2Radian(data) - dxl->direction_*dxl->dxl_state_->position_offset_; // remove offset
+                  dxl->dxl_state_->present_position_ = dxl->convertValue2Radian(data) - dxl->dxl_state_->position_offset_; // remove offset
                 else if (dxl->present_velocity_item_ != 0 && item->item_name_ == dxl->present_velocity_item_->item_name_)
                   dxl->dxl_state_->present_velocity_ = dxl->convertValue2Velocity(data);
                 else if (dxl->present_current_item_ != 0 && item->item_name_ == dxl->present_current_item_->item_name_)
                   dxl->dxl_state_->present_torque_ = dxl->convertValue2Torque(data);
                 else if (dxl->goal_position_item_ != 0 && item->item_name_ == dxl->goal_position_item_->item_name_)
-                  dxl->dxl_state_->goal_position_ = dxl->convertValue2Radian(data) - dxl->direction_*dxl->dxl_state_->position_offset_; // remove offset
+                  dxl->dxl_state_->goal_position_ = dxl->convertValue2Radian(data) - dxl->dxl_state_->position_offset_; // remove offset
                 else if (dxl->goal_velocity_item_ != 0 && item->item_name_ == dxl->goal_velocity_item_->item_name_)
                   dxl->dxl_state_->goal_velocity_ = dxl->convertValue2Velocity(data);
                 else if (dxl->goal_current_item_ != 0 && item->item_name_ == dxl->goal_current_item_->item_name_)
@@ -1263,7 +1263,7 @@ void RobotisController::process()
               if (gazebo_mode_ == false)
               {
                 // add offset
-                uint32_t pos_data = dxl->convertRadian2Value(dxl_state->goal_position_ + dxl->direction_*dxl_state->position_offset_);////////////////////
+                uint32_t pos_data = dxl->convertRadian2Value(dxl_state->goal_position_ + dxl_state->position_offset_);////////////////////
                 uint8_t sync_write_data[4] = { 0 };
                 sync_write_data[0] = DXL_LOBYTE(DXL_LOWORD(pos_data));
                 sync_write_data[1] = DXL_HIBYTE(DXL_LOWORD(pos_data));

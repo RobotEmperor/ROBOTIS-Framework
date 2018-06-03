@@ -77,22 +77,24 @@ Dynamixel::Dynamixel(int id, std::string model_name, float protocol_version)
 double Dynamixel::convertValue2Radian(int32_t value)
 {
   double radian = 0.0;
-  if (value > value_of_0_radian_position_)
-  {
-    if (max_radian_ <= 0)
-      return max_radian_;
-
-    radian = (double) (value - value_of_0_radian_position_) * max_radian_
-               / (double) (value_of_max_radian_position_ - value_of_0_radian_position_);
-  }
-  else if (value < value_of_0_radian_position_)
-  {
-    if (min_radian_ >= 0)
-      return min_radian_;
-
-    radian = (double) (value - value_of_0_radian_position_) * min_radian_
-               / (double) (value_of_min_radian_position_ - value_of_0_radian_position_);
-  }
+  radian = (double) (value - value_of_0_radian_position_) * max_radian_
+             / (double) (value_of_max_radian_position_ - value_of_0_radian_position_);
+//  if (value > value_of_0_radian_position_)
+//  {
+//    if (max_radian_ <= 0)
+//      return max_radian_;
+//
+//    radian = (double) (value - value_of_0_radian_position_) * max_radian_
+//               / (double) (value_of_max_radian_position_ - value_of_0_radian_position_);
+//  }
+//  else if (value < value_of_0_radian_position_)
+//  {
+//    if (min_radian_ >= 0)
+//      return min_radian_;
+//
+//    radian = (double) (value - value_of_0_radian_position_) * min_radian_
+//               / (double) (value_of_min_radian_position_ - value_of_0_radian_position_);
+//  }
 
 //  if (radian > max_radian_)
 //    return max_radian_;
@@ -105,24 +107,26 @@ double Dynamixel::convertValue2Radian(int32_t value)
 int32_t Dynamixel::convertRadian2Value(double radian)
 {
   int32_t value = 0;
-  if (radian > 0)
-  {
-    if (value_of_max_radian_position_ <= value_of_0_radian_position_)
-      return value_of_max_radian_position_;
-
-    value = (radian * (value_of_max_radian_position_ - value_of_0_radian_position_) / max_radian_)
-                + value_of_0_radian_position_;
-  }
-  else if (radian < 0)
-  {
-    if (value_of_min_radian_position_ >= value_of_0_radian_position_)
-      return value_of_min_radian_position_;
-
-    value = (radian * (value_of_min_radian_position_ - value_of_0_radian_position_) / min_radian_)
-                + value_of_0_radian_position_;
-  }
-  else
-    value = value_of_0_radian_position_;
+  value = (radian * (value_of_max_radian_position_ - value_of_0_radian_position_) / max_radian_)
+              + value_of_0_radian_position_;
+//  if (radian > 0)
+//  {
+//    if (value_of_max_radian_position_ <= value_of_0_radian_position_)
+//      return value_of_max_radian_position_;
+//
+//    value = (radian * (value_of_max_radian_position_ - value_of_0_radian_position_) / max_radian_)
+//                + value_of_0_radian_position_;
+//  }
+//  else if (radian < 0)
+//  {
+//    if (value_of_min_radian_position_ >= value_of_0_radian_position_)
+//      return value_of_min_radian_position_;
+//
+//    value = (radian * (value_of_min_radian_position_ - value_of_0_radian_position_) / min_radian_)
+//                + value_of_0_radian_position_;
+//  }
+//  else
+//    value = value_of_0_radian_position_;
 
 //  if (value > value_of_max_radian_position_)
 //    return value_of_max_radian_position_;
