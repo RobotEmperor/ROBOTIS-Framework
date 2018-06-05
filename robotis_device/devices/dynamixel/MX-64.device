@@ -1,5 +1,5 @@
 [device info]
-model_name  = MX-64-3
+model_name  = MX-64-alice
 device_type = dynamixel
 
 [type info]
