@@ -60,8 +60,8 @@ velocity_p_gain_item_name       = velocity_p_gain
 80     |  position_d_gain         |  2     | RW     | RAM    |   0           |  16383      | N
 82     |  position_i_gain         |  2     | RW     | RAM    |   0           |  16383      | N
 84     |  position_p_gain         |  2     | RW     | RAM    |   0           |  16383      | N
-88     |  feedforward 2nd_gain    |  2     | RW     | RAM    |   0           |  16383      | N
-90     |  feedforward 1st_gain    |  2     | RW     | RAM    |   0           |  16383      | N
+88     |  feedforward_2nd_gain    |  2     | RW     | RAM    |   0           |  16383      | N
+90     |  feedforward_1st_gain    |  2     | RW     | RAM    |   0           |  16383      | N
 98     |  bus_watchdog            |  1     | RW     | RAM    |   -1          |  127        | Y
 100    |  goal_pwm                |  2     | RW     | RAM    |   -885        |  885        | Y
 102    |  goal_current            |  2     | RW     | RAM    |   -2047       |  2047       | Y
